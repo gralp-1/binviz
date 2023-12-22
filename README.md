@@ -24,3 +24,8 @@ Output 2D: <br>
 ![image](https://github.com/gralp-1/binviz/assets/62028969/a867a475-ef86-426f-be10-e274bd8ec6f6) <br>
 Output 3D: <br>
 ![image](https://github.com/gralp-1/binviz/blob/main/examples/binviz-zezin-3D.png)
+
+# TODO
+- [x] Refactor to make consistent
+- [ ] Add proper command line flags & arguments
+- [ ] Look into 4D file formats and visualisation
