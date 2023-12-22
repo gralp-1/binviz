@@ -13,7 +13,7 @@ Each consecutive triplet of bytes is a coordinate to a 256x256x256 point cloud. 
 ## How do I use it?
 ```
 go build .
-./binviz <input file> <output name> <dimension>
+./binviz -file <input file> -output <output name> -dimension <dimension> -brightness <brightness> # output name, brightness and dimension are optional
 ```
 This will produce either a PPM image file or a PCD point cloud file depending on the dimension argument.
 
@@ -27,5 +27,8 @@ Output 3D: <br>
 
 # TODO
 - [x] Refactor to make consistent
-- [ ] Add proper command line flags & arguments
+- [x] Add proper command line flags & arguments
 - [ ] Look into 4D file formats and visualisation
+- [ ] Make a custom visualiser and file format which supports 2, 3 and 4 dimensions
+- [ ] Make a way to change the brightness adjustment function
+- [ ] Optimise

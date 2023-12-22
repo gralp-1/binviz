@@ -1,32 +1,27 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"math"
 	"os"
-	"strconv"
 )
-
-var modifier float64
 
 func main() {
 	// Command line arguments
-	fileName := os.Args[1]
-	outputName := os.Args[2]
-	dimension, err := strconv.Atoi(os.Args[3])
-	modifier, err = strconv.ParseFloat(os.Args[4], 64)
-	if err != nil {
-		log.Print(err)
-		log.Print("Defaulting to 2D")
-	}
-	// log arguments
-	fmt.Println("File:       ", fileName)
-	fmt.Println("Output:     ", outputName)
-	fmt.Println("Dimension:  ", dimension)
-	fmt.Println("Brightness: ", modifier)
+	fileName := flag.String("file", "", "Input file name")
+	outputName := flag.String("output", "output.ppm", "Output file name")
+	dimension := flag.Int("dimension", 2, "Dimensionality of output (2 or 3)")
+	modifier := flag.Float64("brightness", 1.0, "Brightness modifier")
+	flag.Parse()
 
-	file, err := os.OpenFile(fileName, os.O_RDONLY, 0666)
+	// log arguments
+	fmt.Println("File:       ", *fileName)
+	fmt.Println("Output:     ", *outputName)
+	fmt.Println("Dimension:  ", *dimension)
+	fmt.Println("Brightness: ", *modifier)
+	file, err := os.OpenFile(*fileName, os.O_RDONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,22 +37,22 @@ func main() {
 	}
 
 	// call appropriate function
-	switch dimension {
+	switch *dimension {
 	case 2:
-		var pixels = Binviz2D(fileBytes)
-		WritePPM(pixels, outputName)
+		var pixels = Binviz2D(fileBytes, *modifier)
+		WritePPM(pixels, *outputName)
 	case 3:
-		var pixels = Binviz3D(fileBytes)
-		WritePCD(pixels, outputName)
+		var pixels = Binviz3D(fileBytes, *modifier)
+		WritePCD(pixels, *outputName)
 	default:
 		log.Fatal("Invalid dimensionality")
 	}
 }
-func AdjustBrightness(pixel float64) float64 {
+func AdjustBrightness(pixel, modifier float64) float64 {
 	return math.Min(1.0-math.Pow((1.0-modifier*pixel), 5.0), 1)
 }
 
-func Binviz3D(fileBytes []byte) [256][256][256]int {
+func Binviz3D(fileBytes []byte, modifier float64) [256][256][256]int {
 	// initialise 256x256 array with 0s
 	var pixels [256][256][256]int = [256][256][256]int{}
 	// count number of occurrences of each byte pair
@@ -82,7 +77,7 @@ func Binviz3D(fileBytes []byte) [256][256][256]int {
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
 			for k := 0; k < 256; k++ {
-				pixels[i][j][k] = int(AdjustBrightness(float64(pixels[i][j][k])/float64(max)) * 255)
+				pixels[i][j][k] = int(AdjustBrightness(float64(pixels[i][j][k])/float64(max), modifier) * 255)
 			}
 		}
 	}
@@ -120,7 +115,7 @@ func WritePCD(pixels [256][256][256]int, fName string) error {
 	return nil
 }
 
-func Binviz2D(fileBytes []byte) [256][256]int {
+func Binviz2D(fileBytes []byte, modifier float64) [256][256]int {
 	// initialise 256x256 array with 0s
 	var pixels [256][256]int = [256][256]int{}
 	// count number of occurrences of each byte pair
@@ -141,7 +136,7 @@ func Binviz2D(fileBytes []byte) [256][256]int {
 	// normalise values and adjust brightness
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
-			pixels[i][j] = int(AdjustBrightness(float64(pixels[i][j])/float64(max)) * 255)
+			pixels[i][j] = int(AdjustBrightness(float64(pixels[i][j])/float64(max), modifier) * 255)
 		}
 	}
 	// write to file
