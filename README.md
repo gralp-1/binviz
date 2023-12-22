@@ -18,6 +18,9 @@ go build .
 This will produce either a PPM image file or a PCD point cloud file depending on the dimension argument.
 
 ## Examples
-Input:     ![zezin](ADDME)
-Output:    ![zezin 2D](ADDME)
-Output 3D: ![zezin 3D](ADDME)
+Input: <br>
+![zezin](https://github.com/gralp-1/binviz/blob/main/examples/zezin.gif) <br>
+Output 2D: <br>
+![image](https://github.com/gralp-1/binviz/assets/62028969/a867a475-ef86-426f-be10-e274bd8ec6f6) <br>
+Output 3D: <br>
+![image](https://github.com/gralp-1/binviz/blob/main/examples/binviz-zezin-3D.png)
