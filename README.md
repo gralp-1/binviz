@@ -25,6 +25,34 @@ Output 2D: <br>
 Output 3D: <br>
 ![image](https://github.com/gralp-1/binviz/blob/main/examples/binviz-zezin-3D.png)
 
+## File format
+I can't find any file formats that support 4 dimensions, so time to make my own. <br>
+I don't know what I'm going to call it yet and I also have no idea what I'm doing. <br>
+This format is WIP and will have the following features:
+- 2D, 3D and 4D support
+- Colour and greyscale support
+
+### Example
+```
+// Header (always in ascii)
+VERSION <float>
+DIMENSION <2 | 3 | 4>
+COLOUR <true | false>
+ENCODING <ASCII | BINARY>
+// File start
+x y r g b     // 2D ASCII colour
+x y val       // 2D ASCII greyscale
+x y z r g b   // 3D ASCII colour
+x y z val     // 3D ASCII greyscale
+x y z w r g b // 4D ASCII colour
+x y z w val   // 4D ASCII greyscale
+```
+Each line is delimited by a newline character. <br>
+Comments are added with `//` and are ignored by the parser. <br>
+all fields must be from 0-255. <br>
+If encoded in binary, each field is one byte and everything is just assumed to be in the correct order, if bytes are missing / there are extra bytes, you'll just get something strange in the visualzer <br>
+For example a point at (34,35,69,255) with a colour of (20,40,10) would be encoded as `34 35 69 20 40 10` in ASCII and `22 23 45 14 28 0A` in binary.
+
 # TODO
 - [x] Refactor to make consistent
 - [x] Add proper command line flags & arguments
