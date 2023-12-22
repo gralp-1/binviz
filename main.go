@@ -96,23 +96,18 @@ func Binviz2D(fileBytes []byte, outputName string) {
 		pixels[b1][b2]++
 	}
 	// find max value
-	max := 0.0
+	max := 0
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
-			f := 0.0
-			if pixels[i][j] > 0 {
-				f = math.Log(float64(pixels[i][j]))
-				if f > float64(max) {
-					max = f
-				}
+			if pixels[i][j] > max {
+				max = pixels[i][j]
 			}
 		}
 	}
-	// normalise values
+	// normalise values and adjust brightness
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
-			t := math.Log(float64(pixels[i][j])) / max
-			pixels[i][j] = int(t * 255)
+			pixels[i][j] = int(AdjustBrightness(float64(pixels[i][j])/float64(max)) * 255)
 		}
 	}
 	// write to file
